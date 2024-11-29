@@ -1,41 +1,26 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-// import { DatabaseModule } from './db/database.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+// import { UsersModule } from './users/users.module';
+import { databaseConfig } from './config/database.config';
 
 @Module({
   imports: [
+    // Load environment variables globally
     ConfigModule.forRoot({
-      isGlobal: true, // Make environment variables available globally
+      isGlobal: true,
     }),
-    // DatabaseModule
-    // MongooseModule.forRoot(process.env.MONGODB_URI_PROD),
 
+    // MongoDB connection using async configuration
     MongooseModule.forRootAsync({
-        imports: [ConfigModule], // no need to import if `ConfigModule` is global true
-        useFactory: (config: ConfigService) => { // this function can be async as well
-          // const username = config.get("DATABASE_USER");
-          // const password = config.get("DATABASE_PASSWORD");
-          // const host = config.get("DATABASE_HOST");
-          // const port = config.get("DATABASE_PORT");
-          // const db = config.get("DATABASE_NAME");
-          // const isLocal = config.get("NODE_ENV") === "LOCAL";
-          
-          const uri = process.env.MONGODB_URI_PROD;
-          // const uri = isLocal
-          //   ? `mongodb://localhost:${port}/${db}`
-          //   : `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
-      
-          return {
-            uri,
-          };
-        },
-        inject: [ConfigService],
-      }),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: databaseConfig,  // Using the factory function to get the connection options
+    }),
+
+    // Example Users Module
+    // UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
