@@ -12,11 +12,9 @@ import { MongooseModuleOptions } from '@nestjs/mongoose';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService): Promise<MongooseModuleOptions> => ({
-        uri: configService.get<string>('MONGO_URI'),
-        useNewUrlParser: true,  // Recommended for MongoDB
-        useUnifiedTopology: true,  // Avoid deprecation warnings
+        uri: configService.get<string>('MONGODB_URI_PROD'),
         retryWrites: true,  // Optional: Enable retrying writes
-        // Add any other necessary MongoDB options here
+        // Additional options can go here if needed
       }),
     }),
   ],
