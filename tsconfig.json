@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node"],
-
+    "types": ["node"],                      // Ensure Node.js types are included
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -18,6 +17,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "moduleResolution": "node"              // Add this line to ensure Node resolution
   }
 }
