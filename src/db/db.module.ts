@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModuleOptions } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -10,8 +11,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI_PROD'),
+      useFactory: async (configService: ConfigService): Promise<MongooseModuleOptions> => ({
+        uri: configService.get<string>('MONGO_URI'),
+        useNewUrlParser: true,  // Recommended for MongoDB
+        useUnifiedTopology: true,  // Avoid deprecation warnings
+        retryWrites: true,  // Optional: Enable retrying writes
+        // Add any other necessary MongoDB options here
       }),
     }),
   ],
