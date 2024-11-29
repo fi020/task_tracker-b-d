@@ -6,15 +6,14 @@ import { MongooseModuleOptions } from '@nestjs/mongoose';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,  // Makes the configuration globally available
+      isGlobal: true,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService): Promise<MongooseModuleOptions> => ({
-        uri: configService.get<string>('MONGODB_URI_PROD'),
-        retryWrites: true,  // Optional: Enable retrying writes
-        // Additional options can go here if needed
+        uri: configService.get<string>('MONGODB_URI_PROD'),  // Ensure this is correct
+        retryWrites: true,  // Optional, you can add other MongoDB options as needed
       }),
     }),
   ],
