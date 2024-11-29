@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule, // Ensure ConfigModule is loaded
+    ConfigModule.forRoot(), // Ensure environment variables are loaded
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -14,16 +14,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           ? configService.get<string>('MONGODB_URI_PROD') // Remote MongoDB URI
           : configService.get<string>('MONGODB_URI_DEV'); // Local MongoDB URI
         
-          console.log(`Connecting to ${isProduction ? 'Production' : 'Local'}`);
-          //         (`Connecting to ${isProduction ? 'Production' : 'Local'} MongoDB at: ${uri}`);
-          // cna not log the uri as it contains password 
+        console.log(`Connecting to ${isProduction ? 'Production' : 'Local'} database`);
 
-  
         return {
           uri,
-        //   useNewUrlParser: true,
-        //   useUnifiedTopology: true,
-// The warnings you're seeing indicate that the useNewUrlParser and useUnifiedTopology options are no longer needed or effective when using MongoDB Node.js Driver version 4.0 or later. These options were previously necessary for connection configuration but have since been deprecated.
+          useNewUrlParser: true, // Ensure compatibility with modern MongoDB drivers
+          useUnifiedTopology: true, // Enable the new server discovery and monitoring engine
         };
       },
     }),
